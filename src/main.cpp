@@ -11,16 +11,16 @@ using namespace cv;
 int testOfQBuilder()
 {
 	QBuilder qb;
-	cout<<qb.getDescriptor("/home/wangjz/thesisProgect/dataset/testPic.jpg")[0];
-
+	//cout<<qb.getDescriptor("/home/wangjz/thesisProgect/dataset/testPic.jpg")[0];
+	qb.getDescriptor("/home/wangjz/thesisProgect/dataset/testPic.jpg");
 	return 0;
 }
 
 int testOfScheduler()
 {
 	QBuilder qb;
-	Scheduler sch = Scheduler(qb, "~", "jpg");
-	sch.run();
+	Scheduler sch = Scheduler(qb, ".", "jpg");
+	sch.buildDatabase();
 	return 0;
 }
 

@@ -1,0 +1,10 @@
+#+STARTUP: indent
+
+* This is a describe of my bachelor degree project
+** ALL FILES IN THIS PROJECT ARE DISTRIBUTED UNDER GPLv3 LICIENCE
+* Dependencies
+** OpenCV 2.4.10
+** SQLite
+** Compile and running better in Ubuntu
+** grep
+** find

@@ -4,6 +4,8 @@
 
 #include "qbuilder.h"
 #include <string>
+#include <bitset>
+#include <vector>
 
 using namespace std;
 
@@ -13,13 +15,13 @@ public:
 	Scheduler();
 	~Scheduler();
 	Scheduler(QBuilder& qb, const string path = "", const string filter = ".jpg\\|.png\\|.tiff");
-	int run();
+	int buildDatabase();
 private:
 	QBuilder *qb;
 	bool selfInitial;
 	string path;
 	string filter;
-	int p_runTask(const string path);
+	vector<bitset<256>> p_computeScalar(const string path);
 };
 
 #endif

@@ -35,24 +35,24 @@ Scheduler::~Scheduler()
 	}
 }
 
-int Scheduler::run()
+int Scheduler::buildDatabase()
 {
 	string cmd = "find " + path + " -type f";
 	cmd += " | grep \"" + filter + "\"";
-	cout<<endl <<cmd<<endl;
+	//cout<<endl <<cmd<<endl;
 	FILE *fileList = popen(cmd.c_str(), "r");
 	string filePath;
 	char temp[2048];
 	while(fscanf(fileList, "%s\n", temp) != -1)
 	{
 		filePath = String(temp);
-		cout<<filePath<<endl;
+		auto res = this->p_computeScalar(filePath);
+
 	}
 	return 0;
 }
 
-int Scheduler::p_runTask(const string path)
+vector<bitset<256>> Scheduler::p_computeScalar(const string path)
 {
-
-	return 0;
+	return this->qb->getDescriptor(path);
 }

@@ -24,12 +24,13 @@ Matcher::~Matcher()
 }
 
 
-bool Matcher::operator()(bitset<224> a, bitset<224> b)
+bool Matcher::operator()(const char *a, const char *b)
 {
 	int count = 0;
 	for(auto i = 0; i < 224; ++i)
 	{
-		count += a[i] ^ b[i];
+		auto pos = i >> 3;
+		count += ((a[pos] ^ b[pos]) >> (i & 7)) & 1;
 		if(count > this->maxDistance)
 			return false;
 	}

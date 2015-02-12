@@ -58,7 +58,6 @@ void Finder::playGround()
 	return;
 }
 
-
 int Finder::newDatabase(const string path)
 {
 	try
@@ -101,10 +100,11 @@ int Finder::addIndex(vector<bitset<256>> scalars, const string filePath)
 	query.exec();
 
 	Statement getId(*(this->db), "SELECT last_insert_rowid() newid;");
-	getId.exec();
+	getId.executeStep();
 	int fileId = getId.getColumn(0);
+	cout<<fileId<<endl;
 	//query.Statement(*(this->db), "");
-
+	Transaction transaction(*(this->db)); // for performance reason
 	for(auto it = scalars.begin(); it != scalars.end(); ++it)
 	{
 		/* |  255~224  | 223~0 |
@@ -152,11 +152,51 @@ int Finder::addIndex(vector<bitset<256>> scalars, const string filePath)
 		insert.bind(2, fileId);
 		insert.exec();
 	}
+	transaction.commit();
 	return 0;
 }
 
-vector<string> Finder::find(bitset<256> scalar)
+vector<string> Finder::find(vector<bitset<256>> scalars)
 {
+	for(auto it = scalars.begin(); it != scalars.end(); ++it)
+	{
+		/* |  255~224  | 223~0 |
+		 * | code word | rest  |
+		 */
+		int codeWord = 0;
+		for(auto i = 255; i >= 224; --i)
+		{
+			codeWord <<= 1;
+			codeWord += (*it)[i];
+		}
+		char feature[29] = {0};
+		/* | 223~0 |
+		 * | 28~0  |
+		 */
+		for(auto i = 223; i >= 0; --i)
+		{
+			auto pos = i / 8;
+			feature[pos] <<= 1;
+			feature[pos] += (*it)[i];
+		}
+
+		try
+		{
+			Statement query(*(this->db), "SELECT * FROM features WHERE code_word = ?;");
+			query.bind(1, codeWord);
+			while(query.executeStep())
+			{
+				if((*(this->isMatch))(feature, query.getColumn(2)))
+				{
+					cout<<"matched"<<endl;
+				}
+			}
+		}
+		catch(std::exception& e)
+		{
+			std::cout << "exception: " << e.what() << std::endl;
+		}
+	}
 	return vector<string>();
 }
 

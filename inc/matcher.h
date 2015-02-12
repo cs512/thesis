@@ -18,7 +18,7 @@ public:
 	Matcher(int maxDistance);
 	Matcher();
 	~Matcher();
-	bool operator()(bitset<224>, bitset<224>);
+	bool operator()(const char *, const char *);
 private:
 	int maxDistance;
 };

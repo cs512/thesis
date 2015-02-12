@@ -26,7 +26,7 @@ public:
 	int newDatabase(const string path);
 	int loadDatabase(const string path);
 	int addIndex(vector<bitset<256>> scalars, const string filePath);
-	vector<string> find(bitset<256> scalar);
+	vector<string> find(vector<bitset<256>> scalars);
 	void playGround();
 private:
 	Matcher *isMatch;

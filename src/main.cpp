@@ -20,8 +20,11 @@ int testOfQBuilder()
 int testOfScheduler()
 {
 	QBuilder qb;
-	Scheduler sch = Scheduler(qb, ".", "jpg");
+	Finder fd;
+	fd.newDatabase("./test.db3");
+	Scheduler sch = Scheduler(qb, fd, ".", "jpg");
 	sch.buildDatabase();
+	sch.search("/home/wangjz/thesisProgect/dataset/testPic.jpg");
 	return 0;
 }
 
@@ -29,7 +32,6 @@ int testOfFinder()
 {
 	Finder fd;
 	fd.newDatabase("./test.db3");
-
 	return 0;
 }
 
@@ -43,8 +45,8 @@ int playWithFinder()
 int main()
 {
     //testOfQBuilder();
-    //testOfScheduler();
+    testOfScheduler();
     //playWithFinder();
-	testOfFinder();
+//	testOfFinder();
     return 0;
 }

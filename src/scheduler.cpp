@@ -1,5 +1,6 @@
 #include "qbuilder.h"
 #include "scheduler.h"
+#include "finder.h"
 #include <opencv2/opencv.hpp>
 #include <opencv2/features2d/features2d.hpp>
 #include <opencv2/nonfree/features2d.hpp>
@@ -10,7 +11,7 @@
 #include <cstdio>
 
 using namespace std;
-
+/*
 Scheduler::Scheduler()
 {
 	this->qb = new QBuilder();
@@ -18,10 +19,12 @@ Scheduler::Scheduler()
 	this->path = "~";
 	this->filter = ".jpg\\|.png\\|.tiff";
 }
+*/
 
-Scheduler::Scheduler(QBuilder& qb, const string path, const string filter)
+Scheduler::Scheduler(QBuilder& qb, Finder& fd, const string path, const string filter)
 {
 	this->qb = &qb;
+	this->fd = &fd;
 	this->selfInitial = false;
 	this->path = path;
 	this->filter = filter;
@@ -47,8 +50,15 @@ int Scheduler::buildDatabase()
 	{
 		filePath = String(temp);
 		auto res = this->p_computeScalar(filePath);
-
+		cout<<filePath<<endl;
+		this->fd->addIndex(res, filePath);
 	}
+	return 0;
+}
+
+int Scheduler::search(const string filePath)
+{
+	this->fd->find(this->p_computeScalar(filePath));
 	return 0;
 }
 

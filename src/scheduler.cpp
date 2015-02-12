@@ -50,7 +50,7 @@ int Scheduler::buildDatabase()
     {
         filePath = String(temp);
         auto res = this->p_computeScalar(filePath);
-        //cout<<filePath<<endl;
+        cout<<filePath<<endl;
         this->fd->addIndex(res, filePath);
     }
     return 0;

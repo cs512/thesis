@@ -2,9 +2,23 @@
 
 * This is a describe of my bachelor degree project
 ** ALL FILES IN THIS PROJECT ARE DISTRIBUTED UNDER GPLv3 LICIENCE
+** THE FILES IN inc/SQLiteCpp BELONG TO SRombauts
 * Dependencies
 ** OpenCV 2.4.10
-** SQLite and SQLiteCpp(https://github.com/SRombauts/SQLiteCpp)
-** Compile and running better in Ubuntu
-** grep
-** find
++ SQLite and SQLiteCpp(https://github.com/SRombauts/SQLiteCpp)
++ Compile and running better in Ubuntu
++ grep
++ find
+* The schema of SQLite table
++ features (storing features)
+| id         | primary key, integer(32bit)   |
+| code_word  | integer(32bit)                |
+| feature    | blob(32bit*28=224bit)         |
+| uc_feature | unique key(code_word,feature) |
++ files (storing file path)
+| id   | primary key, integer(32bit) |
+| path | vchar(1024)                 |
++ features_files (stroing the many to many relationship between files and features)
+| id         | primary key, integer(32bit)      |
+| feature_id | foreign key features.id, integer |
+| file_id    | foreign key files.id, integer    |

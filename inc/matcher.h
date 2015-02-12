@@ -15,10 +15,12 @@ using namespace std;
 class Matcher
 {
 public:
+	Matcher(int maxDistance);
 	Matcher();
 	~Matcher();
 	bool operator()(bitset<224>, bitset<224>);
 private:
+	int maxDistance;
 };
 
 #endif /* MATCHER_H_ */

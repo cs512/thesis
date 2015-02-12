@@ -4,6 +4,7 @@
 #include "main.h"
 #include "qbuilder.h"
 #include "scheduler.h"
+#include "finder.h"
 
 using namespace std;
 using namespace cv;
@@ -24,9 +25,26 @@ int testOfScheduler()
 	return 0;
 }
 
+int testOfFinder()
+{
+	Finder fd;
+	fd.newDatabase("./test.db3");
+
+	return 0;
+}
+
+int playWithFinder()
+{
+	Finder fd;
+	fd.playGround();
+	return 0;
+}
+
 int main()
 {
-    testOfQBuilder();
-    testOfScheduler();
+    //testOfQBuilder();
+    //testOfScheduler();
+    //playWithFinder();
+	testOfFinder();
     return 0;
 }

@@ -15,12 +15,12 @@ using namespace std;
 class Matcher
 {
 public:
-	Matcher(int maxDistance);
-	Matcher();
-	~Matcher();
-	bool operator()(const char *, const char *);
+    Matcher(int maxDistance);
+    Matcher();
+    ~Matcher();
+    bool operator()(const char *, const char *);
 private:
-	int maxDistance;
+    int maxDistance;
 };
 
 #endif /* MATCHER_H_ */

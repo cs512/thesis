@@ -4,7 +4,7 @@
 ** ALL FILES IN THIS PROJECT ARE DISTRIBUTED UNDER GPLv3 LICIENCE
 * Dependencies
 ** OpenCV 2.4.10
-** SQLite
+** SQLite and SQLiteCpp(https://github.com/SRombauts/SQLiteCpp)
 ** Compile and running better in Ubuntu
 ** grep
 ** find

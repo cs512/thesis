@@ -5,48 +5,117 @@
 #include "qbuilder.h"
 #include "scheduler.h"
 #include "finder.h"
+#include <getopt.h>
+#include <cstring>
 
 using namespace std;
 using namespace cv;
 
 int testOfQBuilder()
 {
-	QBuilder qb;
-	//cout<<qb.getDescriptor("/home/wangjz/thesisProgect/dataset/testPic.jpg")[0];
-	qb.getDescriptor("/home/wangjz/thesisProgect/dataset/testPic.jpg");
-	return 0;
+    QBuilder qb;
+    //cout<<qb.getDescriptor("/home/wangjz/thesisProgect/dataset/testPic.jpg")[0];
+    qb.getDescriptor("/home/wangjz/thesisProgect/dataset/testPic.jpg");
+    return 0;
 }
 
 int testOfScheduler()
 {
-	QBuilder qb;
-	Finder fd;
-	fd.newDatabase("./test.db3");
-	Scheduler sch = Scheduler(qb, fd, ".", "jpg");
-	sch.buildDatabase();
-	sch.search("/home/wangjz/thesisProgect/dataset/testPic.jpg");
-	return 0;
+    QBuilder qb;
+    Matcher mt;
+    Finder fd(mt, 3);
+    fd.newDatabase("./test.db3");
+    Scheduler sch = Scheduler(qb, fd, ".", "jpg");
+    sch.buildDatabase();
+//  sch.search("/home/wangjz/thesisProgect/dataset/testPic.jpg");
+    auto res = sch.search("/home/wangjz/thesisProgect/dataset/testPic.jpg");
+//  cout<<res<<endl;
+    return 0;
 }
 
 int testOfFinder()
 {
-	Finder fd;
-	fd.newDatabase("./test.db3");
-	return 0;
+    Matcher mt;
+    Finder fd(mt, 3);
+    //fd.newDatabase("./test.db3");
+    return 0;
 }
 
 int playWithFinder()
 {
-	Finder fd;
-	fd.playGround();
-	return 0;
+    Finder fd;
+    fd.playGround();
+    return 0;
 }
 
-int main()
+int createDatabase(const string dbPath, const string filePath)
 {
-    //testOfQBuilder();
-    testOfScheduler();
-    //playWithFinder();
-//	testOfFinder();
+    QBuilder qb;
+    Matcher mt;
+    Finder fd(mt, 1);
+    fd.newDatabase(dbPath);
+    Scheduler sch(qb, fd, filePath,".jpg\\|.png\\|.tiff");
+
+    return 0;
+}
+
+int main(int argc, char *argv[])
+{
+
+//    testOfQBuilder();
+//    testOfScheduler();
+//    playWithFinder();
+//  testOfFinder();
+    int oc;
+    char *opt_arg;
+    const char *short_options = "f:d:s:";
+    const struct option long_options[] = {
+        {  "func",      1,  NULL,   'f' },
+        {  "dir",       1,  NULL,   'd' },
+        {  "sql",       1,  NULL,   's' },
+        {  NULL,        0,  NULL,   0   }
+    };
+    int mode = 0;
+    string dbSqlPath;
+    string dbDir;
+    while((oc = getopt_long(argc, argv, short_options, long_options, NULL)) != -1)
+    {
+        switch(oc)
+        {
+            case 'f':
+                //func
+                opt_arg = optarg;
+                if(strcmp("create", opt_arg) == 0)
+                {
+                    mode = CREATE_MODE;
+                }
+                else if(strcmp("find", opt_arg) == 0)
+                {
+                    mode = SEARCH_MODE;
+                }
+                else
+                {
+                    cout<<"function "<<opt_arg<<" not supported."<<endl;
+                    return -1;
+                }
+                break;
+            case 'd':
+                //dir
+                opt_arg = optarg;
+                dbDir.clear();
+                dbDir.append(opt_arg);
+                break;
+                case 's':
+                //dbfile
+                opt_arg = optarg;
+                dbSqlPath.clear();
+                break;
+            case '?':
+                cout<<"help information"<<endl;
+                return -1;
+                break;
+        }
+    }
+
     return 0;
 }

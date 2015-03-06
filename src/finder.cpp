@@ -108,8 +108,7 @@ int Finder::loadDatabase(const string path)
     {
         if(this->db != NULL)
             delete (this->db);
-        this->db = new Database(path, SQLITE_OPEN_READWRITE);
-        this->db->exec(this->buildString);
+        this->db = new Database(path, SQLITE_OPEN_READONLY);
     }
     catch(std::exception& e)
     {
@@ -196,7 +195,7 @@ vector<int> Finder::buildCodeWord(int codeWord)
 map<string, int> Finder::find(vector<bitset<256>> scalars)
 {
     vector<int> res;
-    int count = 0;
+
     for(auto it = scalars.begin(); it != scalars.end(); ++it)
     {
         /* |  255~224  | 223~0 |
@@ -221,16 +220,19 @@ map<string, int> Finder::find(vector<bitset<256>> scalars)
 
         try
         {
-            Statement query(*(this->db), "SELECT * FROM features WHERE code_word = ?;");
-            query.bind(1, codeWord);
-            while(query.executeStep())
-            {
-                count++;
-                if((*(this->isMatch))(feature, query.getColumn(2)))
-                {
-                    res.push_back(query.getColumn(0));
-                }
-            }
+        	for(auto itemxb = this->xorTable.begin(); itemxb != this->xorTable.end(); ++it)
+        	{
+        		Statement query(*(this->db), "SELECT * FROM features WHERE code_word = ?;");
+				query.bind(1, codeWord ^ (*itemxb));
+				while(query.executeStep())
+				{
+					if((*(this->isMatch))(feature, query.getColumn(2)))
+					{
+						auto t = query.getColumn(0);
+						res.push_back(t);
+					}
+				}
+        	}
         }
         catch(std::exception& e)
         {
@@ -242,10 +244,12 @@ map<string, int> Finder::find(vector<bitset<256>> scalars)
     {
         Statement query(*(this->db), "SELECT files.path FROM features_files, files WHERE features_files.feature_id = ? and features_files.file_id = files.id;");
         query.bind(1, (*it));
+        int count = 0;
         while(query.executeStep())
         {
+        	//cout<<count++<<endl;
+        	count++;
             string path = query.getColumn(0);
-            cout<<path<<endl;
             if(ret.find(path) != ret.end())
             {
                 //finded
@@ -254,8 +258,12 @@ map<string, int> Finder::find(vector<bitset<256>> scalars)
             else
             {
                 //not find
-                ret[path] = 0;
+                ret[path] = 1;
             }
+        }
+        if(count > 1)
+        {
+        	cout<<"id:"<<(*it)<<":over:"<<count<<endl;
         }
     }
     return ret;

@@ -35,18 +35,6 @@ bool Matcher::operator()(const char *a, const char *b)
         count += ((a[pos] ^ b[pos]) >> (i & 7)) & 1;
         if(count > this->maxDistance)
         {
-            cout<<"a:";
-            for(auto j = 0; j < 28; ++j)
-            {
-                cout<<int(a[j])<<',';
-            }
-            cout<<endl;
-            cout<<"b:";
-            for(auto j = 0; j < 28; ++j)
-            {
-                cout<<int(b[j])<<',';
-            }
-            cout<<endl;
             return false;
         }
 

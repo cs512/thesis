@@ -220,7 +220,7 @@ map<string, int> Finder::find(vector<bitset<256>> scalars)
 
         try
         {
-        	for(auto itemxb = this->xorTable.begin(); itemxb != this->xorTable.end(); ++it)
+        	for(auto itemxb = this->xorTable.begin(); itemxb != this->xorTable.end(); ++itemxb)
         	{
         		Statement query(*(this->db), "SELECT * FROM features WHERE code_word = ?;");
 				query.bind(1, codeWord ^ (*itemxb));

@@ -117,6 +117,35 @@ int Finder::loadDatabase(const string path)
     return 0;
 }
 
+int Finder::getCodeword(bitset<256> scalar)
+{
+    /* |    0~31   | 32~255 |
+    *  | code word |  rest  |
+    */
+    int codeWord = 0;
+    for(auto i = 0; i < 32; ++i)
+    {
+        codeWord <<= 1;
+        codeWord += scalar[i];
+    }
+    return codeWord;
+}
+
+int Finder::getFeature(bitset<256> scalar, char* fet)
+{
+    char feature[29] = {0};
+    /* | 32~255 |
+    *  | 0~28  |
+    */
+    for(auto i = 32; i < 256; ++i)
+    {
+        auto pos = (i-32) / 8;
+        fet[pos] <<= 1;
+        fet[pos] += scalar[i];
+    }
+    return 0;
+}
+
 int Finder::addIndex(vector<bitset<256>> scalars, const string filePath)
 {
     if(this->db == NULL)
@@ -133,25 +162,9 @@ int Finder::addIndex(vector<bitset<256>> scalars, const string filePath)
     Transaction transaction(*(this->db)); // for performance reason
     for(auto it = scalars.begin(); it != scalars.end(); ++it)
     {
-        /* |  255~224  | 223~0 |
-         * | code word | rest  |
-         */
-        int codeWord = 0;
-        for(auto i = 255; i >= 224; --i)
-        {
-            codeWord <<= 1;
-            codeWord += (*it)[i];
-        }
+        auto codeWord = this->getCodeword(*it);
         char feature[29] = {0};
-        /* | 223~0 |
-         * | 28~0  |
-         */
-        for(auto i = 223; i >= 0; --i)
-        {
-            auto pos = i / 8;
-            feature[pos] <<= 1;
-            feature[pos] += (*it)[i];
-        }
+        this->getFeature(*it, feature);
 
         try
         {
@@ -198,25 +211,9 @@ map<string, int> Finder::find(vector<bitset<256>> scalars)
 
     for(auto it = scalars.begin(); it != scalars.end(); ++it)
     {
-        /* |  255~224  | 223~0 |
-         * | code word | rest  |
-         */
-        int codeWord = 0;
-        for(auto i = 255; i >= 224; --i)
-        {
-            codeWord <<= 1;
-            codeWord += (*it)[i];
-        }
+        auto codeWord = this->getCodeword(*it);
         char feature[29] = {0};
-        /* | 223~0 |
-         * | 28~0  |
-         */
-        for(auto i = 223; i >= 0; --i)
-        {
-            auto pos = i / 8;
-            feature[pos] <<= 1;
-            feature[pos] += (*it)[i];
-        }
+        this->getFeature(*it, feature);
 
         try
         {

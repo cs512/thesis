@@ -32,6 +32,8 @@ public:
 private:
     vector<int> buildCodeWord(int);
     int buildTable(int, int, int);
+    int getCodeword(bitset<256> scalar);
+    int getFeature(bitset<256> scalar, char* fet);
     Matcher *isMatch;
     bool selfInitial;
     Database *db;

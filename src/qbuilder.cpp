@@ -65,6 +65,7 @@ vector<bitset<256>> QBuilder::p_qlizer(Mat &descriptors)
     vector<bitset<256>> ret;
     for(auto i = 0; i < descriptors.rows; ++i)
     {
+        //auto rowPtr = (float *)&(descriptors.row(i).col(0).data[0]);
         auto rowPtr = &(descriptors.at<float>(i, 0));
         float sortedRow[128] = {0};
         memcpy(sortedRow, rowPtr, 128*sizeof(float));

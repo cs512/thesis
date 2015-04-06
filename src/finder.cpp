@@ -126,9 +126,16 @@ int Finder::getCodeword(bitset<256> scalar)
     int codeWord = 0;
     for(auto i = 0; i < 32; ++i)
     {
+#ifdef DEBUG
+        cout<<scalar[i];
+#endif
         codeWord <<= 1;
         codeWord += scalar[i];
     }
+#ifdef DEBUG
+        cout<<"CWCW"<<endl;
+        cout<<"codeWord:"<<codeWord<<endl;
+#endif
     return codeWord;
 }
 

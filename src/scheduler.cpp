@@ -49,7 +49,15 @@ int Scheduler::buildDatabase()
     while(fscanf(fileList, "%s\n", temp) != -1)
     {
         filePath = String(temp);
-        auto res = this->p_computeScalar(filePath);
+        vector<bitset<256>> res;
+        try
+        {
+            res = this->p_computeScalar(filePath);
+        }
+        catch(std::exception& e)
+        {
+            cout << e.what() << endl;
+        }
         cout<<filePath<<endl;
         this->fd->addIndex(res, filePath);
     }

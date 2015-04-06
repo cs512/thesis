@@ -23,7 +23,7 @@ int testOfScheduler()
 {
     QBuilder qb;
     Matcher mt;
-    Finder fd(mt, 3);
+    Finder fd(mt, 0);
     fd.newDatabase("./test.db3");
     Scheduler sch = Scheduler(qb, fd, ".", "jpg");
     sch.buildDatabase();

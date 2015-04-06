@@ -12,6 +12,7 @@
 #include <iostream>
 #include <map>
 #include "SQLiteCpp/SQLiteCpp.h"
+#include "debug.h"
 
 using namespace std;
 using namespace SQLite;
@@ -133,7 +134,7 @@ int Finder::getCodeword(bitset<256> scalar)
 
 int Finder::getFeature(bitset<256> scalar, char* fet)
 {
-    char feature[29] = {0};
+    //char feature[29] = {0};
     /* | 32~255 |
     *  | 0~28  |
     */
@@ -146,11 +147,17 @@ int Finder::getFeature(bitset<256> scalar, char* fet)
     return 0;
 }
 
+#ifdef DEBUG
+#include<fstream>
+#endif
+
 int Finder::addIndex(vector<bitset<256>> scalars, const string filePath)
 {
     if(this->db == NULL)
         return -1;
-
+#ifdef DEBUG
+    ofstream fo(filePath+".txt");
+#endif
     Statement query(*(this->db), "INSERT INTO files VALUES (NULL, ?)");
     query.bind(1, filePath);
     query.exec();
@@ -163,6 +170,9 @@ int Finder::addIndex(vector<bitset<256>> scalars, const string filePath)
     for(auto it = scalars.begin(); it != scalars.end(); ++it)
     {
         auto codeWord = this->getCodeword(*it);
+#ifdef DEBUG
+        fo << codeWord << endl;
+#endif
         char feature[29] = {0};
         this->getFeature(*it, feature);
 
@@ -177,7 +187,6 @@ int Finder::addIndex(vector<bitset<256>> scalars, const string filePath)
         {
             std::cout << "exception: " << e.what() << std::endl;
         }
-
         Statement query(*(this->db), "SELECT * FROM features INDEXED BY index_code_word WHERE code_word = ? AND feature = ?");
         query.bind(1, codeWord);
         query.bind(2, (void *)feature, 28);
@@ -192,6 +201,9 @@ int Finder::addIndex(vector<bitset<256>> scalars, const string filePath)
         insert.exec();
     }
     transaction.commit();
+#ifdef DEBUG
+    fo.close();
+#endif
     return 0;
 }
 
@@ -257,10 +269,6 @@ map<string, int> Finder::find(vector<bitset<256>> scalars)
                 //not find
                 ret[path] = 1;
             }
-        }
-        if(count > 1)
-        {
-        	cout<<"id:"<<(*it)<<":over:"<<count<<endl;
         }
     }
     return ret;

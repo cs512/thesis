@@ -28,6 +28,7 @@ Matcher::~Matcher()
 
 bool Matcher::operator()(const char *a, const char *b)
 {
+    //return true;
     int count = 0;
     for(auto i = 0; i < 224; ++i)
     {

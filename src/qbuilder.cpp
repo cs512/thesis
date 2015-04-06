@@ -7,9 +7,16 @@
 #include <algorithm>
 #include <bitset>
 #include <vector>
+#include "debug.h"
+#include <fstream>
 
 using namespace std;
 using namespace cv;
+
+bool comp(float a,float b)
+{
+    return a>b;
+}
 
 QBuilder::QBuilder()
 {
@@ -38,21 +45,33 @@ vector<bitset<256>> QBuilder::getDescriptor(const string path)
     Mat descriptors;
     vector<KeyPoint> keypoints;
     (*(this->detector))(imageGray, noArray(), keypoints, descriptors);
+#ifdef DEBUG
+    ofstream fo(path+".sift");
+    for(auto i = 0; i < descriptors.rows; ++i)
+    {
+        for(auto j = 0; j < descriptors.cols; ++j)
+        {
+            fo << descriptors.at<float>(i, j) << ' ';
+        }
+        fo << endl;
+    }
+    fo.close();
+#endif
     return this->p_qlizer(descriptors);
 }
 
-vector<bitset<256>> QBuilder::p_qlizer(Mat descriptors)
+vector<bitset<256>> QBuilder::p_qlizer(Mat &descriptors)
 {
     vector<bitset<256>> ret;
     for(auto i = 0; i < descriptors.rows; ++i)
     {
-        auto rowPtr = &(descriptors.at<float>(i));
-        float *sortedRow = new float[128];
+        auto rowPtr = &(descriptors.at<float>(i, 0));
+        float sortedRow[128] = {0};
         memcpy(sortedRow, rowPtr, 128*sizeof(float));
-        sort(sortedRow, sortedRow+127);
-        auto f1 = sortedRow[64] + sortedRow[65];
+        sort(sortedRow, sortedRow+128, comp);
+        auto f1 = sortedRow[64] + sortedRow[63];
         f1 /= 2.0f;
-        auto f2 = sortedRow[32] + sortedRow[33];
+        auto f2 = sortedRow[32] + sortedRow[31];
         f2 /= 2.0f;
 
         bitset<256> rowScalar;

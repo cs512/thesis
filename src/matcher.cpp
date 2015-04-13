@@ -30,10 +30,10 @@ bool Matcher::operator()(const char *a, const char *b)
 {
     //return true;
     int count = 0;
-    for(auto i = 0; i < 224; ++i)
+    for(auto i = 0; i < 224/8; ++i)
     {
-        auto pos = i >> 3;
-        count += ((a[pos] ^ b[pos]) >> (i & 7)) & 1;
+        auto pos = i;
+        count += __builtin_popcount(a[pos] ^ b[pos]);
         if(count > this->maxDistance)
         {
             return false;

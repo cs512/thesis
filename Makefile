@@ -17,7 +17,7 @@ MKDIR := mkdir -p
 CC := clang++
 TARGETS = main.elf
 
-CFLAGS := -O3 -I$(PROJECT_INC_DIR) `pkg-config --cflags opencv` -std=c++11 
+CFLAGS := -O3 -I$(PROJECT_INC_DIR) `pkg-config --cflags opencv` -std=c++11
 LDFLAG := -L$(PROJECT_LIB_DIR) `pkg-config --libs opencv` -lSQLiteCpp -lsqlite3
 
 src :=$(wildcard $(PROJECT_SRC_DIR)/*.cpp)

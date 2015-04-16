@@ -7,21 +7,28 @@
 #include <bitset>
 #include <vector>
 
+#include "hesaff/hesaff.h"
+#include "hesaff/affine.h"
+
 using namespace std;
 using namespace cv;
 
-class QBuilder
+class QBuilder : AffineHessianCallback
 {
 public:
     QBuilder();
     ~QBuilder();
     QBuilder(Ptr<Feature2D> detector);
     vector<bitset<256>> getDescriptor(const string path);
+    void onAffineHessianFound(const float * desc);
 
 private:
-    vector<bitset<256>> p_qlizer(Mat &descriptors);
+    bitset<256> p_qlizer(const float * descriptors);
     bool selfInitial;
-    Ptr<Feature2D> detector;
+    HessianAffineParams par;
+    vector<bitset<256>> ret;
+//    Ptr<Feature2D> detector;
+//    AffineHessianDetector* detector;
 };
 
 #endif

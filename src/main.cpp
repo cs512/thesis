@@ -63,7 +63,7 @@ int searchDatabase(const string sqlPath, const string filePath)
 {
 	QBuilder qb;
 	Matcher mt;
-	Finder fd(mt, 1);
+	Finder fd(mt, 0);
 	fd.loadDatabase(sqlPath);
 	Scheduler sch(qb, fd, "","");
 	auto res = sch.search(filePath);

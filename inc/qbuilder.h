@@ -6,6 +6,7 @@
 #include <string>
 #include <bitset>
 #include <vector>
+#include "ASiftDetector.h"
 
 using namespace std;
 using namespace cv;
@@ -15,13 +16,13 @@ class QBuilder
 public:
     QBuilder();
     ~QBuilder();
-    QBuilder(Ptr<Feature2D> detector);
+//    QBuilder(Ptr<Feature2D> detector);
     vector<bitset<256>> getDescriptor(const string path);
 
 private:
     vector<bitset<256>> p_qlizer(Mat &descriptors);
     bool selfInitial;
-    Ptr<Feature2D> detector;
+    ASiftDetector detector;
 };
 
 #endif

@@ -21,30 +21,32 @@ bool comp(float a,float b)
 QBuilder::QBuilder()
 {
     this->selfInitial = true;
-    initModule_nonfree();
-    this->detector = Algorithm::create<Feature2D>("Feature2D.SIFT");
+//    initModule_nonfree();
+//    this->detector = Algorithm::create<Feature2D>("Feature2D.SIFT");
 }
 
 QBuilder::~QBuilder()
 {
     if(this->selfInitial)
     {
-        this->detector.release();
+//        this->detector.release();
     }
 }
 
-QBuilder::QBuilder(Ptr<Feature2D> detector)
-{
-    this->detector = detector;
-    this->selfInitial = false;
-}
+//QBuilder::QBuilder(Ptr<Feature2D> detector)
+//{
+//    this->detector = detector;
+//    this->selfInitial = false;
+//}
 
 vector<bitset<256>> QBuilder::getDescriptor(const string path)
 {
     Mat imageGray = imread(path, 0);
     Mat descriptors;
     vector<KeyPoint> keypoints;
-    (*(this->detector))(imageGray, noArray(), keypoints, descriptors);
+//    (*(this->detector))(imageGray, noArray(), keypoints, descriptors);
+    this->detector.detectAndCompute(imageGray, keypoints, descriptors);
+    cout<<"DONE"<<endl;
 #ifdef DEBUG
     ofstream fo(path+".sift");
     for(auto i = 0; i < descriptors.rows; ++i)

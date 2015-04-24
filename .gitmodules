@@ -1,0 +1,3 @@
+[submodule "3rd/opensift"]
+	path = 3rd/opensift
+	url = git://github.com/robwhess/opensift

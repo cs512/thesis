@@ -14,6 +14,9 @@
 #include "SQLiteCpp/SQLiteCpp.h"
 #include "debug.h"
 
+#include "opensift/sift.h"
+#include "opensift/imgfeatures.h"
+
 using namespace std;
 using namespace SQLite;
 

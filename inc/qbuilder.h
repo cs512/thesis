@@ -19,7 +19,7 @@ public:
     vector<bitset<256>> getDescriptor(const string path);
 
 private:
-    vector<bitset<256>> p_qlizer(Mat &descriptors);
+    bitset<256> p_qlizer(const double *descriptors);
     bool selfInitial;
     Ptr<Feature2D> detector;
 };

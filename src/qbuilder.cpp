@@ -77,7 +77,7 @@ vector<bitset<256>> QBuilder::getDescriptor(const string path)
 bitset<256> QBuilder::p_qlizer(const double *descriptors)
 {
     auto rowPtr = descriptors;
-    float sortedRow[128] = {0};
+    double sortedRow[128] = {0};
     for(auto i = 0; i < 128; ++i)
     {
         sortedRow[i] = descriptors[i];

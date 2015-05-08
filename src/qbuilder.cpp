@@ -20,7 +20,7 @@ static bool comp(float a,float b)
 
 static int swapBlock(void * a, void * b, size_t sz)
 {
-    void *tmp = new char[sz];
+    char *tmp = new char[sz];
     memcpy(tmp, a, sz);
     memcpy(a, b, sz);
     memcpy(b, tmp, sz);

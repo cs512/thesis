@@ -62,7 +62,7 @@ int createDatabase(const string sqlPath, const string dbPath)
 int searchDatabase(const string sqlPath, const string filePath)
 {
 	QBuilder qb;
-	Matcher mt;
+	Matcher mt(10);
 	Finder fd(mt, 1);
 	fd.loadDatabase(sqlPath);
 	Scheduler sch(qb, fd, "","");

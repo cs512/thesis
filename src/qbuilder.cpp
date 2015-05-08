@@ -13,9 +13,83 @@
 using namespace std;
 using namespace cv;
 
-bool comp(float a,float b)
+static bool comp(float a,float b)
 {
     return a>b;
+}
+
+static unsigned char build3_3Bins(const float *desc)
+{
+    int arr[9] = {0};
+    int maxx = 0;
+    for(auto i = 0; i < 8; ++i)
+    {
+        arr[i] = desc[i] + desc[i + 8] + desc[i + 16]
+               + desc[i + 32] + desc[i + 40] + desc[i + 48]
+               + desc[i + 96] + desc[i + 104] + desc[i + 112];
+        maxx = (maxx > arr[i]) ? maxx : arr[i];
+    }
+    float tot = 0, count = 0;
+    for(auto i = 0; i < 8; ++i)
+    {
+        if(arr[i] == maxx)
+        {
+            count += 1.0;
+            tot += arr[i];
+        }
+    }
+    tot /= count;
+    unsigned char ret = tot;
+    ret &= 0b111;
+    return ret;
+}
+
+static unsigned char build2_2Bins(const float *desc)
+{
+    int arr[9] = {0};
+    int maxx = 0;
+    for(auto i = 0; i < 8; ++i)
+    {
+        arr[i] = desc[i] + desc[i + 8] + desc[i + 32] + desc[i + 40];
+        maxx = (maxx > arr[i]) ? maxx : arr[i];
+    }
+    float tot = 0, count = 0;
+    for(auto i = 0; i < 8; ++i)
+    {
+        if(arr[i] == maxx)
+        {
+            count += 1.0;
+            tot += arr[i];
+        }
+    }
+    tot /= count;
+    unsigned char ret = tot;
+    ret &= 0b111;
+    return ret;
+}
+
+static unsigned char build1_1Bins(const float *desc)
+{
+    float tot = 0, count = 0;
+    int maxx = 0;
+    int arr[9] = {0};
+    for(auto i = 0; i < 8; ++i)
+    {
+        arr[i] = desc[i];
+        maxx = (maxx > arr[i]) ? maxx : arr[i];
+    }
+    for(auto i = 0; i < 8; ++i)
+    {
+        if(arr[i] == maxx)
+        {
+            count += 1.0;
+            tot += arr[i];
+        }
+    }
+    tot /= count;
+    unsigned char ret = tot;
+    ret &= 0b111;
+    return ret;
 }
 
 QBuilder::QBuilder()
@@ -67,33 +141,36 @@ vector<bitset<256>> QBuilder::p_qlizer(Mat &descriptors)
     {
         //auto rowPtr = (float *)&(descriptors.row(i).col(0).data[0]);
         auto rowPtr = &(descriptors.at<float>(i, 0));
-        float sortedRow[128] = {0};
-        memcpy(sortedRow, rowPtr, 128*sizeof(float));
-        sort(sortedRow, sortedRow+128, comp);
-        auto f1 = sortedRow[64] + sortedRow[63];
-        f1 /= 2.0f;
-        auto f2 = sortedRow[32] + sortedRow[31];
-        f2 /= 2.0f;
-
+        unsigned char grayTable[] = {0, 1, 3, 2, 6, 7, 5, 4};
         bitset<256> rowScalar;
-        for(auto j = 0; j < 128; ++j)
-        {
-            if(rowPtr[j] < f1)
+//        for(auto x = 0; x < 2; ++x)
+//            for(auto y = 0; y < 2; ++y)
+//            {
+//                unsigned char ret = build2_2Bins(rowPtr + x * 32 + y * 8);
+//                int pos = x * 2 + y;
+//                rowScalar[pos] = (grayTable[ret & 0b111] >> 2) & 1;
+//                rowScalar[pos + 1] = (grayTable[ret & 0b111] >> 1) & 1;
+//                rowScalar[pos + 2] = grayTable[ret & 0b111] & 1;
+//            }
+        for(auto x = 0; x < 3; ++x)
+            for(auto y = 0; y < 3; ++y)
             {
-                rowScalar[j] = 0;
-                rowScalar[j+128] = 0;
+                unsigned char ret = build2_2Bins(rowPtr + x * 32 + y * 8);
+                int pos = (x * 3 + y) * 3;
+                rowScalar[pos] = (grayTable[ret & 0b111] >> 2) & 1;
+                rowScalar[pos + 1] = (grayTable[ret & 0b111] >> 1) & 1;
+                rowScalar[pos + 2] = grayTable[ret & 0b111] & 1;
             }
-            else if(rowPtr[j] < f2)
+        for(auto x = 0; x < 4; ++x)
+            for(auto y = 0; y < 4; ++y)
             {
-                rowScalar[j] = 1;
-                rowScalar[j+128] = 0;
+                unsigned char ret = build1_1Bins(rowPtr + x * 32 + y * 8);
+                int pos = (x * 4 + y) * 3 + 32;
+                rowScalar[pos] = (grayTable[ret & 0b111] >> 2) & 1;
+                rowScalar[pos + 1] = (grayTable[ret & 0b111] >> 1) & 1;
+                rowScalar[pos + 2] = grayTable[ret & 0b111] & 1;
             }
-            else
-            {
-                rowScalar[j] = 1;
-                rowScalar[j+128] = 1;
-            }
-        }
+        cout << rowScalar << endl;
         ret.push_back(rowScalar);
     }
 

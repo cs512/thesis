@@ -38,9 +38,9 @@ static unsigned char build3_3Bins(const float *desc)
             tot += arr[i];
         }
     }
-    tot /= count;
+    tot /= count * 2;
     unsigned char ret = tot;
-    ret &= 0b111;
+    ret &= 0b11;
     return ret;
 }
 
@@ -62,9 +62,9 @@ static unsigned char build2_2Bins(const float *desc)
             tot += arr[i];
         }
     }
-    tot /= count;
+    tot /= count * 2;
     unsigned char ret = tot;
-    ret &= 0b111;
+    ret &= 0b11;
     return ret;
 }
 
@@ -86,9 +86,9 @@ static unsigned char build1_1Bins(const float *desc)
             tot += arr[i];
         }
     }
-    tot /= count;
+    tot /= count * 2;
     unsigned char ret = tot;
-    ret &= 0b111;
+    ret &= 0b11;
     return ret;
 }
 
@@ -137,40 +137,40 @@ vector<bitset<256>> QBuilder::getDescriptor(const string path)
 vector<bitset<256>> QBuilder::p_qlizer(Mat &descriptors)
 {
     vector<bitset<256>> ret;
+    cout << descriptors.rows << endl;
     for(auto i = 0; i < descriptors.rows; ++i)
     {
         //auto rowPtr = (float *)&(descriptors.row(i).col(0).data[0]);
         auto rowPtr = &(descriptors.at<float>(i, 0));
         unsigned char grayTable[] = {0, 1, 3, 2, 6, 7, 5, 4};
         bitset<256> rowScalar;
-//        for(auto x = 0; x < 2; ++x)
-//            for(auto y = 0; y < 2; ++y)
-//            {
-//                unsigned char ret = build2_2Bins(rowPtr + x * 32 + y * 8);
-//                int pos = x * 2 + y;
-//                rowScalar[pos] = (grayTable[ret & 0b111] >> 2) & 1;
-//                rowScalar[pos + 1] = (grayTable[ret & 0b111] >> 1) & 1;
-//                rowScalar[pos + 2] = grayTable[ret & 0b111] & 1;
-//            }
+        for(auto x = 0; x < 2; ++x)
+            for(auto y = 0; y < 2; ++y)
+            {
+                unsigned char ret = build3_3Bins(rowPtr + x * 32 + y * 8);
+                int pos = (x * 2 + y) * 2;
+                rowScalar[pos] = (grayTable[ret & 0b111]) & 1;
+                rowScalar[pos + 1] = (grayTable[ret & 0b111] >> 1) & 1;
+                //rowScalar[pos + 2] = grayTable[ret & 0b111] & 1;
+            }
         for(auto x = 0; x < 3; ++x)
             for(auto y = 0; y < 3; ++y)
             {
                 unsigned char ret = build2_2Bins(rowPtr + x * 32 + y * 8);
-                int pos = (x * 3 + y) * 3;
-                rowScalar[pos] = (grayTable[ret & 0b111] >> 2) & 1;
+                int pos = (x * 3 + y) * 2 + 8;
+                rowScalar[pos] = (grayTable[ret & 0b111]) & 1;
                 rowScalar[pos + 1] = (grayTable[ret & 0b111] >> 1) & 1;
-                rowScalar[pos + 2] = grayTable[ret & 0b111] & 1;
+                //rowScalar[pos + 2] = grayTable[ret & 0b111] & 1;
             }
         for(auto x = 0; x < 4; ++x)
             for(auto y = 0; y < 4; ++y)
             {
                 unsigned char ret = build1_1Bins(rowPtr + x * 32 + y * 8);
-                int pos = (x * 4 + y) * 3 + 32;
-                rowScalar[pos] = (grayTable[ret & 0b111] >> 2) & 1;
+                int pos = (x * 4 + y) * 2 + 32;
+                rowScalar[pos] = (grayTable[ret & 0b111]) & 1;
                 rowScalar[pos + 1] = (grayTable[ret & 0b111] >> 1) & 1;
-                rowScalar[pos + 2] = grayTable[ret & 0b111] & 1;
+                //rowScalar[pos + 2] = grayTable[ret & 0b111] & 1;
             }
-        cout << rowScalar << endl;
         ret.push_back(rowScalar);
     }
 

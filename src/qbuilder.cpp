@@ -24,6 +24,7 @@ static int swapBlock(void * a, void * b, size_t sz)
     memcpy(tmp, a, sz);
     memcpy(a, b, sz);
     memcpy(b, tmp, sz);
+    delete tmp;
     return 0;
 }
 

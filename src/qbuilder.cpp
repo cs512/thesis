@@ -137,7 +137,7 @@ vector<bitset<256>> QBuilder::getDescriptor(const string path)
 vector<bitset<256>> QBuilder::p_qlizer(Mat &descriptors)
 {
     vector<bitset<256>> ret;
-    cout << descriptors.rows << endl;
+    //cout << descriptors.rows << endl;
     for(auto i = 0; i < descriptors.rows; ++i)
     {
         //auto rowPtr = (float *)&(descriptors.row(i).col(0).data[0]);

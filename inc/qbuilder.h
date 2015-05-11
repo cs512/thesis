@@ -7,6 +7,11 @@
 #include <bitset>
 #include <vector>
 
+extern "C"
+{
+#include <vl/sift.h>
+}
+
 using namespace std;
 using namespace cv;
 
@@ -15,13 +20,11 @@ class QBuilder
 public:
     QBuilder();
     ~QBuilder();
-    QBuilder(Ptr<Feature2D> detector);
     vector<bitset<256>> getDescriptor(const string path);
 
 private:
-    vector<bitset<256>> p_qlizer(Mat &descriptors);
+    bitset<256> p_qlizer(const float *descriptors);
     bool selfInitial;
-    Ptr<Feature2D> detector;
 };
 
 #endif

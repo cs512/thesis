@@ -54,7 +54,7 @@ int createDatabase(const string sqlPath, const string dbPath)
     Matcher mt;
     Finder fd(mt, 1);
     fd.newDatabase(sqlPath);
-    Scheduler sch(qb, fd, dbPath,".jpg\\|.png\\|.tiff");
+    Scheduler sch(qb, fd, dbPath,".jpg.sift.desc");
     sch.buildDatabase();
     return 0;
 }

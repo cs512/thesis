@@ -239,19 +239,19 @@ map<string, int> Finder::find(vector<bitset<256>> scalars)
 
         try
         {
-        	for(auto itemxb = this->xorTable.begin(); itemxb != this->xorTable.end(); ++itemxb)
-        	{
-        		Statement query(*(this->db), "SELECT * FROM features WHERE code_word = ?;");
-				query.bind(1, codeWord ^ (*itemxb));
-				while(query.executeStep())
-				{
-					if((*(this->isMatch))(feature, query.getColumn(2)))
-					{
-						auto t = query.getColumn(0);
-						res.push_back(t);
-					}
-				}
-        	}
+            for(auto itemxb = this->xorTable.begin(); itemxb != this->xorTable.end(); ++itemxb)
+            {
+                Statement query(*(this->db), "SELECT * FROM features WHERE code_word = ?;");
+                query.bind(1, codeWord ^ (*itemxb));
+                while(query.executeStep())
+                {
+                    if((*(this->isMatch))(feature, query.getColumn(2)))
+                    {
+                        auto t = query.getColumn(0);
+                        res.push_back(t);
+                    }
+                }
+            }
         }
         catch(std::exception& e)
         {
@@ -266,8 +266,8 @@ map<string, int> Finder::find(vector<bitset<256>> scalars)
         int count = 0;
         while(query.executeStep())
         {
-        	//cout<<count++<<endl;
-        	count++;
+            //cout<<count++<<endl;
+            count++;
             string path = query.getColumn(0);
             if(ret.find(path) != ret.end())
             {

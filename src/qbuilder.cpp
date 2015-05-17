@@ -54,7 +54,7 @@ vector<bitset<256>> QBuilder::getDescriptor(const string path)
         float desc[128] = {0};
         for(auto j = 0; j < nDim; ++j)
         {
-            fin >> desc[i];
+            fin >> desc[j];
         }
         descriptors.push_back(this->p_qlizer(desc));
     }

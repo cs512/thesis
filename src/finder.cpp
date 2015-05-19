@@ -281,3 +281,17 @@ map<string, int> Finder::find(vector<bitset<256>> scalars)
     return ret;
 }
 
+map<string, int> Finder::getTotal(map<string, int> result)
+{
+    map<string, int> total;
+    for(auto it = result.begin(); it != result.end(); ++it)
+    {
+        Statement query(*(this->db), "select count(*) from features_files, files where files.path=? and files.id = features_files.file_id;");
+        query.bind(1, (*it).first);
+        query.executeStep();
+        int count = query.getColumn(0);
+        total[it->first] = count;
+    }
+    return total;
+}
+

@@ -20,9 +20,13 @@ for i in range(0, 1, 4):
     output = commands.getoutput(s)
     sortArr = []
     for eachLine in output.split('\n'):
-        tmp = tuple(eachLine.split(':'))
-        sortArr.append(tmp)
-        sortArr.sort(key = lambda x:int(x[1]), reverse = True)
+        header = eachLine.split('$')[0]
+        footer = eachLine.split('$')[1]
+        footer = float(footer)
+        tmp = header.split(':')
+        tmp[1] = float(tmp[1]) / footer
+        sortArr.append(tuple(tmp))
+        sortArr.sort(key = lambda x:x[1], reverse = True)
         sortArr = sortArr[:4]
     for path, num in sortArr:
         m = patt.search(path)

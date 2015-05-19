@@ -67,9 +67,10 @@ int searchDatabase(const string sqlPath, const string filePath)
 	fd.loadDatabase(sqlPath);
 	Scheduler sch(qb, fd, "","");
 	auto res = sch.search(filePath);
+	auto tot = fd.getTotal(res);
 	for(auto it = res.begin(); it != res.end(); ++it)
 	{
-		cout<<(*it).first<<":"<<(*it).second<<endl;
+		cout<<(*it).first<<":"<<(*it).second<<'$'<<tot[it->first]<<endl;
 	}
 	return 0;
 }

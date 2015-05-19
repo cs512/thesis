@@ -29,6 +29,7 @@ public:
     int addIndex(vector<bitset<256>> scalars, const string filePath);
     map<string, int> find(vector<bitset<256>> scalars);
     void playGround();
+    map<string, int> getTotal(map<string, int> result);
 private:
     vector<int> buildCodeWord(int);
     int buildTable(int, int, int);

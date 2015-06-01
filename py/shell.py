@@ -13,7 +13,7 @@ def convert(path):
     tmpfile = '/dev/shm/{0}.pgm'.format(path)
     outfile = './out/{0}.sift.desc'.format(path)
     x = os.system('djpeg {0} | ppmtopgm | pnmnorm -bpercent=0.01 -wpercent=0.01 > {1}'.format(path, tmpfile))
-    x = os.system('./compute_descriptors_linux64 -i {0} -o1 {1} -hesaff -sift'.format(tmpfile, outfile))
+    x = os.system('./compute_descriptors_linux64 -i {0} -o1 {1} -affinesift -sift'.format(tmpfile, outfile))
     os.system('rm -f {0}'.format(tmpfile))
     return
 
